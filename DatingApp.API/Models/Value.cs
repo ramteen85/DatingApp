@@ -6,5 +6,7 @@ namespace DatingApp.API.Models
 
         public string Name { get; set; }
 
+        
+
     }
 }
