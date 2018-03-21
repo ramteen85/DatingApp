@@ -6,8 +6,6 @@ using DatingApp.API.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-//initial commit test 2
-
 
 namespace DatingApp.API.Controllers
 {
