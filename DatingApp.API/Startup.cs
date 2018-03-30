@@ -35,9 +35,6 @@ namespace DatingApp.API
         {
             var key = Encoding.ASCII.GetBytes(Configuration.GetSection("AppSettings:Token").Value);
             services.AddDbContext<DataContext>(x => x.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
-            services.AddMvc().AddJsonOptions(opt => {
-                opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
-            });
             services.AddTransient<Seed>();
             services.AddCors();
             services.AddAutoMapper();
@@ -53,6 +50,16 @@ namespace DatingApp.API
                     ValidateAudience = false
                 };
             });
+            services.AddMvc().AddJsonOptions(opt => 
+            {
+                opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+            });
+           
+            
+            
+            
+            
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -78,10 +85,11 @@ namespace DatingApp.API
                     });
                 });
             }
-            //seeder.SeedUsers(); seed JSON users to database
+            //seeder.SeedUsers(); //seed JSON users to database
+            app.UseAuthentication();
             app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin().AllowCredentials());
             app.UseMvc();
-            app.UseAuthentication();
+            
         }
     }
 }
