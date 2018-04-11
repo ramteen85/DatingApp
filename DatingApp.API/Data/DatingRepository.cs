@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -52,8 +53,15 @@ namespace DatingApp.API.Data
             }
 
             if(userParams.MinAge != 18 || userParams.MaxAge != 99) {
-                users = users.Where(u => u.DateOfBirth.CalculateAge()  >= userParams.MinAge
-                    && u.DateOfBirth.CalculateAge() <= userParams.MaxAge);
+                // users = users.Where(u => u.DateOfBirth.CalculateAge()  >= userParams.MinAge
+                //     && u.DateOfBirth.CalculateAge() <= userParams.MaxAge);
+
+                var min = DateTime.Today.AddYears(-userParams.MaxAge - 1);
+                var max = DateTime.Today.AddYears(-userParams.MinAge);
+
+                users = users.Where(u => u.DateOfBirth >= min && u.DateOfBirth <= max);
+
+                
             }
 
             if(!string.IsNullOrEmpty(userParams.OrderBy))
@@ -118,11 +126,11 @@ namespace DatingApp.API.Data
         public async Task<IEnumerable<Message>> GetMessageThread(int userId, int recipientId)
         {
              var messages = await _context.Messages.Include(u => u.Sender).ThenInclude(p => p.Photos)
-                                            .Include(u => u.Recipient).ThenInclude(p => p.Photos)
-                                            .Where(m => (m.RecipientId == userId && m.RecipientDeleted == false && m.SenderId == recipientId) 
-                                            || (m.RecipientId == recipientId && m.SenderId == userId && m.SenderDeleted == false))
-                                            .OrderByDescending(m => m.MessageSent)
-                                            .ToListAsync();
+                .Include(u => u.Recipient).ThenInclude(p => p.Photos)
+                .Where(m => (m.RecipientId == userId && m.RecipientDeleted == false && m.SenderId == recipientId) 
+                || (m.RecipientId == recipientId && m.SenderId == userId && m.SenderDeleted == false))
+                .OrderByDescending(m => m.MessageSent)
+                .ToListAsync();
         
             return messages;
         }

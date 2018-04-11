@@ -122,7 +122,7 @@ namespace DatingApp.API.Controllers
 
             if(await _repo.SaveAll())
             {
-                return Ok();
+                return Ok(new {}); //parameter is to pass an empty object to avoid all confusing non existant errors
             }
 
             return BadRequest("Failed to like user");
